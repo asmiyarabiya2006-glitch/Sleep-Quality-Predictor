@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sleep Quality Predictor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #dbe7ff, #e6dcff);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .card {
+            max-width: 450px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(100, 80, 180, 0.2);
+        }
+        h1 { color: #4b3f9e; text-align: center; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #7a7a9d; margin-top: 0; }
+        label { color: #4b3f9e; font-weight: 600; }
+        input[type=number] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 2px solid #d4ccf5;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+        input[type=range] { width: 100%; margin-top: 8px; }
+        .buttons { display: flex; gap: 10px; margin-top: 20px; }
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .predict { background: #6c5ce7; color: white; }
+        .reset { background: #e6e3fa; color: #4b3f9e; }
+        .result {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f1eeff;
+            border-radius: 12px;
+        }
+        .result h2 { color: #4b3f9e; margin-top: 0; }
+        .result li { color: #555; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🌙 Sleep Quality Predictor</h1>
+        <p class="subtitle">A smart way to monitor and improve your sleep</p>
+
+        <form action="/predict" method="POST">
+
+            <label>🛏️ Sleep Duration (hours):</label>
+            <input type="number" name="sleep_duration" step="0.1" min="0" max="12" required>
+            <br><br>
+
+            <label>🏃 Exercise (minutes per day):</label>
+            <input type="number" name="activity" min="0" max="300" required>
+            <br><br>
+
+            <label>😟 Stress Level (0 to 10): <b id="stress_value">5</b></label>
+            <input type="range" name="stress" min="0" max="10" value="5"
+                   oninput="document.getElementById('stress_value').innerText = this.value">
+
+            <div class="buttons">
+                <button type="submit" class="predict">Predict Sleep Quality</button>
+                <button type="reset" class="reset">Reset</button>
+            </div>
+        </form>
+        <p style="text-align:center; margin-top:20px;">
+            <a href="/history" style="color:#6c5ce7; font-weight:600; text-decoration:none;">📈 View Past Predictions</a>
+        </p>
+
+        {% if result %}
+        <div class="result">
+            <h2>Predicted Sleep Quality: {{ result }}</h2>
+            <h3>Tips for you:</h3>
+            <ul>
+                {% for tip in tips %}
+                <li>{{ tip }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
